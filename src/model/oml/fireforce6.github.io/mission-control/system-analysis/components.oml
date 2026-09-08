@@ -6,6 +6,48 @@ description <https://fireforce6.github.io/mission-control/system-analysis/compon
     uses <https://www.modelware.io/sierra/component#> as component
     uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
 
+    // =========================================================================
+    //  YLK Added 09-08-2026: BIOMEDICAL & CREW HEALTH TELEMETRY SUBSYSTEM
+    // =========================================================================
+
+    instance BioTelemetrySubsystem : component:Component [
+        base:description "On-Board Biomedical and Responder Physiological Telemetry Subsystem"
+        base:isContainedBy Platform
+    ]
+
+    instance VitalSignsDAU : component:Component [
+        base:description "Physiological Vital Signs Data Acquisition and Signal Conditioning Unit"
+        base:isContainedBy BioTelemetrySubsystem
+    ]
+
+    instance BiomarkerGasAnalyzer : component:Component [
+        base:description "Laser Absorption Spectrometer for Inhaled Toxin and Smoke Biomarker Ingestion"
+        base:isContainedBy VitalSignsDAU
+    ]
+
+    instance VitalsECGDigitizer : component:Component [
+        base:description "Multi-Lead Biosignal Analog Front-End and Electrocardiogram Digitizer"
+        base:isContainedBy VitalSignsDAU
+    ]
+
+    instance ClinicalTelemetryProcessor : component:Component [
+        base:description "Radiation-Tolerant DSP for Physiological Waveform Analysis and Triage Scoring"
+        base:isContainedBy BioTelemetrySubsystem
+    ]
+
+    instance ClinicalStorageVault : component:Component [
+        base:description "Encrypted Solid-State Enclave for Protected Physiological Log Storage"
+        base:isContainedBy BioTelemetrySubsystem
+    ]
+
+    instance BioDataGateway : component:Component [
+        base:description "SpaceWire Protocol Adapter and Secure Medical Data Telemetry Bridge"
+        base:isContainedBy BioTelemetrySubsystem
+    ]
+
+    // =========================================================================
+    // =========================================================================
+    
     instance Payload : component:Component [
         base:description "Wildfire Detection Payload"
         base:isContainedBy FireSat
@@ -886,4 +928,6 @@ description <https://fireforce6.github.io/mission-control/system-analysis/compon
     instance FireSat : component:Component [
         base:description "FireSat Spacecraft"
     ]
+
 }
+

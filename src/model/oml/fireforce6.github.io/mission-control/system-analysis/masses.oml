@@ -465,4 +465,33 @@ description <https://fireforce6.github.io/mission-control/system-analysis/masses
     ref instance components:GPSProcessor : component:PhysicalPart [
         component:mass 0.2^^si:kg
     ]
+
+    // =========================================================================
+    //  YLK Added 09-08-2026: BIOMEDICAL SUBSYSTEM COMPONENT MASSES (only applied to leaves)
+    // =========================================================================
+
+    ref instance components:BiomarkerGasAnalyzer : component:PhysicalPart [
+        component:mass 1.2^^si:kg
+    ]
+
+    ref instance components:VitalsECGDigitizer : component:PhysicalPart [
+        component:mass 0.8^^si:kg
+    ]
+
+    ref instance components:ClinicalTelemetryProcessor : component:PhysicalPart [
+        component:mass 2.1^^si:kg
+    ]
+
+    ref instance components:ClinicalStorageVault : component:PhysicalPart [
+        component:mass 0.5^^si:kg
+    ]
+
+    ref instance components:BioDataGateway : component:PhysicalPart [
+        component:mass 0.4^^si:kg
+    ]
+
+    // =========================================================================
+    // =========================================================================
+
+
 }

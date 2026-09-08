@@ -4,6 +4,122 @@ description <https://fireforce6.github.io/mission-control/system-analysis/connec
 
 	uses <https://www.modelware.io/sierra/component#> as component
 
+    // =========================================================================
+    //  YLK Added 09-08-2026: 
+    // =========================================================================
+
+    // =========================================================================
+    // BIOMEDICAL TELEMETRY SIGNALS
+    // =========================================================================
+
+    instance BioTelemetrySignal : component:Signal []
+    instance RawGasSampleData : component:Signal []
+    instance RawBiosignalData : component:Signal []
+    instance EncryptedHealthRecord : component:Signal []
+
+    // =========================================================================
+    // PORTS DEFINITIONS & ASSIGNMENTS
+    // =========================================================================
+
+    // 1. Gas Exposure Acquisition Sensor
+    ref instance components:BiomarkerGasAnalyzer [
+        component:hasPort BiomarkerGasAnalyzer.Data_Out
+    ]
+    instance BiomarkerGasAnalyzer.Data_Out : component:Port [ 
+        component:direction "Out" 
+    ]
+
+    // 2. Biosignal / ECG Acquisition Digitizer
+    ref instance components:VitalsECGDigitizer [
+        component:hasPort VitalsECGDigitizer.Waveform_Out
+    ]
+    instance VitalsECGDigitizer.Waveform_Out : component:Port [ 
+        component:direction "Out" 
+    ]
+
+    // 3. Clinical Telemetry Processor (Analysis Tool)
+    ref instance components:ClinicalTelemetryProcessor [
+        component:hasPort ClinicalTelemetryProcessor.GasData_In
+        component:hasPort ClinicalTelemetryProcessor.ECG_In
+        component:hasPort ClinicalTelemetryProcessor.Vault_Out
+        component:hasPort ClinicalTelemetryProcessor.Tlm_Out
+    ]
+    instance ClinicalTelemetryProcessor.GasData_In : component:Port [ 
+        component:direction "In" 
+    ]
+    instance ClinicalTelemetryProcessor.ECG_In : component:Port [ 
+        component:direction "In" 
+    ]
+    instance ClinicalTelemetryProcessor.Vault_Out : component:Port [ 
+        component:direction "Out" 
+    ]
+    instance ClinicalTelemetryProcessor.Tlm_Out : component:Port [ 
+        component:direction "Out" 
+    ]
+
+    // 4. Clinical Storage Vault
+    ref instance components:ClinicalStorageVault [
+        component:hasPort ClinicalStorageVault.Archive_In
+    ]
+    instance ClinicalStorageVault.Archive_In : component:Port [ 
+        component:direction "In" 
+    ]
+
+    // 5. Biomedical Telemetry Gateway / Bus Adapter
+    ref instance components:BioDataGateway [
+        component:hasPort BioDataGateway.Processor_In
+        component:hasPort BioDataGateway.SpaceWire_Out
+    ]
+    instance BioDataGateway.Processor_In : component:Port [ 
+        component:direction "In" 
+    ]
+    instance BioDataGateway.SpaceWire_Out : component:Port [ 
+        component:direction "Out" 
+    ]
+
+    // =========================================================================
+    // CONNECTIONS (RELATION INSTANCES)
+    // =========================================================================
+
+    // Acquisition -> Analysis (Gas Sensor to Processor)
+    relation instance Conn_GasAnalyzer_to_Processor : component:Connection [
+        from BiomarkerGasAnalyzer.Data_Out
+        to ClinicalTelemetryProcessor.GasData_In
+        component:transfers RawGasSampleData
+    ]
+
+    // Acquisition -> Analysis (ECG Digitizer to Processor)
+    relation instance Conn_ECGDigitizer_to_Processor : component:Connection [
+        from VitalsECGDigitizer.Waveform_Out
+        to ClinicalTelemetryProcessor.ECG_In
+        component:transfers RawBiosignalData
+    ]
+
+    // Analysis -> Storage (Processor to Encrypted Vault)
+    relation instance Conn_Processor_to_StorageVault : component:Connection [
+        from ClinicalTelemetryProcessor.Vault_Out
+        to ClinicalStorageVault.Archive_In
+        component:transfers EncryptedHealthRecord
+    ]
+
+    // Analysis -> Gateway (Processor to Telemetry Bridge)
+    relation instance Conn_Processor_to_BioGateway : component:Connection [
+        from ClinicalTelemetryProcessor.Tlm_Out
+        to BioDataGateway.Processor_In
+        component:transfers BioTelemetrySignal
+    ]
+
+    // Gateway -> Platform Telemetry Bus (Joining FireSat Platform Data Flow)
+    relation instance Conn_BioGateway_to_Platform : component:Connection [
+        from BioDataGateway.SpaceWire_Out
+        to Platform.Data_In
+        component:transfers BioTelemetrySignal
+    ]
+
+    // =========================================================================
+    // =========================================================================
+
+
     ref instance components:FireSat [
         component:hasPort FireSat.Command_In
         component:hasPort FireSat.Telemetry_Out
