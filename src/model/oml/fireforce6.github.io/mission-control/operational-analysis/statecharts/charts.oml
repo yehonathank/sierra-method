@@ -1,0 +1,192 @@
+@dc:title "Statecharts"
+@dc:description "Hierarchical statecharts for Fire Force operational systems."
+description <https://fireforce6.github.io/mission-control/operational-analysis/statecharts/charts#> as charts {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    uses <https://www.modelware.io/sierra/base#> as base
+    uses <https://www.modelware.io/sierra/state2#> as state2
+    extends <https://fireforce6.github.io/mission-control/operational-analysis/entities#> as entities
+
+    instance AIFireWardenChart : state2:Statechart [
+        state2:isAllocatedTo entities:AIFireWarden
+        base:description "Hierarchical statechart of the AI Fire Warden, from observation through an approved action."
+    ]
+
+    instance WardenRegion : state2:Region [
+        state2:inComposite AIFireWardenChart
+        base:description "Single region for the warden operational modes."
+    ]
+
+    instance WardenEntry : state2:Entry [
+        state2:region WardenRegion
+        base:description "Entry into the warden chart."
+    ]
+
+    instance WardenObserving : state2:State [
+        state2:region WardenRegion
+        base:description "Warden monitors telemetry and looks for anomalies."
+    ]
+
+    instance WardenAdvising : state2:State [
+        state2:region WardenRegion
+        base:description "Warden formulates a recommendation or task."
+    ]
+
+    instance WardenAwaitingApproval : state2:State [
+        state2:region WardenRegion
+        base:description "Warden has proposed an action and is awaiting human approval."
+    ]
+
+    instance WardenExecutingAction : state2:State [
+        state2:region WardenRegion
+        base:description "Warden is executing an approved mitigation task."
+    ]
+
+    instance DashboardChart : state2:Statechart [
+        state2:isAllocatedTo entities:DashboardSystem
+        base:description "Hierarchical statechart of the Mission Control Dashboard operational modes."
+    ]
+
+    instance DashboardRegion : state2:Region [
+        state2:inComposite DashboardChart
+        base:description "Single region for dashboard operational modes."
+    ]
+
+    instance DashboardEntry : state2:Entry [
+        state2:region DashboardRegion
+        base:description "Entry into the dashboard chart."
+    ]
+
+    instance DashboardIdle : state2:State [
+        state2:region DashboardRegion
+        base:description "Dashboard is idle or on standby."
+    ]
+
+    instance DashboardMonitoring : state2:State [
+        state2:region DashboardRegion
+        base:description "Dashboard is actively monitoring live items."
+    ]
+
+    instance DashboardAlertHandling : state2:State [
+        state2:region DashboardRegion
+        base:description "Dashboard is handling a critical alert."
+    ]
+
+    instance DashboardDecisionPending : state2:State [
+        state2:region DashboardRegion
+        base:description "Dashboard is awaiting human approval for an AI-suggested task."
+    ]
+
+    instance FireCloudChart : state2:Statechart [
+        state2:isAllocatedTo entities:FireCloud
+        base:description "Hierarchical statechart of Fire Cloud telemetry ingest."
+    ]
+
+    instance CloudRegion : state2:Region [
+        state2:inComposite FireCloudChart
+        base:description "Single region for Fire Cloud ingest modes."
+    ]
+
+    instance CloudEntry : state2:Entry [
+        state2:region CloudRegion
+        base:description "Entry into the Fire Cloud chart."
+    ]
+
+    instance CloudIdle : state2:State [
+        state2:region CloudRegion
+        base:description "Fire Cloud is connected but not streaming telemetry."
+    ]
+
+    instance CloudStreaming : state2:State [
+        state2:region CloudRegion
+        base:description "Fire Cloud is streaming fire, drone, and satellite telemetry."
+    ]
+
+    instance CloudDegraded : state2:State [
+        state2:region CloudRegion
+        base:description "Fire Cloud ingest is degraded and retrying."
+    ]
+
+    instance WardenStart : state2:Transition [
+        state2:source WardenEntry
+        state2:target WardenObserving
+        base:description "Warden becomes active and starts observation."
+    ]
+
+    instance WardenDetect : state2:Transition [
+        state2:source WardenObserving
+        state2:target WardenAdvising
+        base:description "While observing, the warden detects an anomaly."
+    ]
+
+    instance WardenPropose : state2:Transition [
+        state2:source WardenAdvising
+        state2:target WardenAwaitingApproval
+        base:description "Warden sends a structured proposal to the operator."
+    ]
+
+    instance WardenApproved : state2:Transition [
+        state2:source WardenAwaitingApproval
+        state2:target WardenExecutingAction
+        base:description "Operator approval starts execution."
+    ]
+
+    instance WardenComplete : state2:Transition [
+        state2:source WardenExecutingAction
+        state2:target WardenObserving
+        base:description "Execution completes and the warden returns to observing."
+    ]
+
+    instance DashboardStart : state2:Transition [
+        state2:source DashboardEntry
+        state2:target DashboardIdle
+        base:description "Dashboard session starts in idle."
+    ]
+
+    instance DashboardGoLive : state2:Transition [
+        state2:source DashboardIdle
+        state2:target DashboardMonitoring
+        base:description "Operator starts live monitoring."
+    ]
+
+    instance DashboardAlert : state2:Transition [
+        state2:source DashboardMonitoring
+        state2:target DashboardAlertHandling
+        base:description "A critical alert moves the dashboard into alert handling."
+    ]
+
+    instance DashboardNeedsApproval : state2:Transition [
+        state2:source DashboardAlertHandling
+        state2:target DashboardDecisionPending
+        base:description "The alert needs a human decision on an AI proposal."
+    ]
+
+    instance DashboardDecided : state2:Transition [
+        state2:source DashboardDecisionPending
+        state2:target DashboardMonitoring
+        base:description "The operator decides and the dashboard returns to monitoring."
+    ]
+
+    instance CloudStart : state2:Transition [
+        state2:source CloudEntry
+        state2:target CloudIdle
+        base:description "Fire Cloud connects and waits to stream."
+    ]
+
+    instance CloudStream : state2:Transition [
+        state2:source CloudIdle
+        state2:target CloudStreaming
+        base:description "Telemetry streaming begins."
+    ]
+
+    instance CloudDegrade : state2:Transition [
+        state2:source CloudStreaming
+        state2:target CloudDegraded
+        base:description "Ingest degrades and Fire Cloud starts retrying."
+    ]
+
+    instance CloudRecover : state2:Transition [
+        state2:source CloudDegraded
+        state2:target CloudStreaming
+        base:description "Ingest recovers and streaming resumes."
+    ]
+}

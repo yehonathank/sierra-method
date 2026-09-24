@@ -1,12 +1,15 @@
 vocabulary <https://www.modelware.io/sierra/state2#> as state2 {
 
+	extends <http://purl.org/dc/elements/1.1/> as dc
 	extends <https://www.modelware.io/sierra/base#> as base
+	extends <https://www.modelware.io/sierra/entity#> as ^entity
 
     aspect CompositeElement
 
     relation regions [
         from CompositeElement
         to Region
+        reverse inComposite
         inverse functional
     ]
 
@@ -52,6 +55,14 @@ vocabulary <https://www.modelware.io/sierra/state2#> as state2 {
     concept State < RegularState, CompositeElement
 
     concept Statechart < CompositeElement, base:Element
+
+    @dc:description "Allocates a Statechart to the operational entity whose modes it models."
+    relation isAllocatedTo [
+        from Statechart
+        to entity:Entity
+        reverse allocates
+        functional
+    ]
 
     // Predicates
 
