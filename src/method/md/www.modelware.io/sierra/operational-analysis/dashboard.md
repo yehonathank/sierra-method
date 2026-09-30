@@ -17,6 +17,27 @@ template:
 
 View how mission objectives are addressed by operational capabilities allocated to operational entities.
 
+```table
+PREFIX mission: <https://www.modelware.io/sierra/mission#>
+PREFIX entity: <https://www.modelware.io/sierra/entity#>
+PREFIX : <http://opencaesar.io/diagram#>
+
+SELECT ?objective ?capability ?entity
+
+WHERE {
+    ?objective mission:requires ?capability .
+    ?capability entity:isAssignedTo ?entity .
+
+    BIND(IRI(CONCAT("/requires/", MD5(CONCAT(STR(?objective), STR(?capability))))) AS ?requires)
+    BIND(IRI(CONCAT("/assigns/", MD5(CONCAT(STR(?capability), STR(?entity))))) AS ?assigns)
+    BIND(IF (EXISTS { GRAPH ?g4 { ?entity a entity:Actor } }, "actor", "entity") AS ?entityClass)
+
+    BIND(REPLACE(STR(?objective), "^.*[#/]", "") AS ?objectiveLabel)
+    BIND(REPLACE(STR(?capability), "^.*[#/]", "") AS ?capabilityLabel)
+    BIND(REPLACE(STR(?entity), "^.*[#/]", "") AS ?entityLabel)
+}
+```
+
 ```diagram
 ---  
 stylesheet:
