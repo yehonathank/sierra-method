@@ -72,6 +72,12 @@
   <tr>
     <td>11. <a href="./Operational%20Analysis/Dashboard2.md">View Operations Dashboard2 (WASM Notebook)</a></td>
   </tr>
+  <tr>
+    <td>12. <a href="./Operational%20Analysis/Analysis.md">Analyze Operational Coverage</a></td>
+  </tr>
+  <tr>
+    <td>13. <a href="./Operational%20Analysis/Coverage.md">View Capability Coverage</a></td>
+  </tr>
 </table>
 
 ## System Analysis
