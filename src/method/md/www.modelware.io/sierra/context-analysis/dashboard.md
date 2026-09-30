@@ -78,7 +78,7 @@ rowColumnLabel: Mission / Stakeholder
 stylesheet:
   - selector: cell [Number(value) > 1]
     style:
-      background-color: lightgreen
+      background-color: green
 ---
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX mission: <https://www.modelware.io/sierra/mission#>

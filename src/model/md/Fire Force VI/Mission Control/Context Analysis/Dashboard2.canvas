@@ -71,11 +71,11 @@
       "width": 482,
       "height": 162,
       "url": "https://modelware.io/",
-      "label": "Modelware | Neurosymbolic Systems Engineering",
+      "label": "Modelware | OML Code, Neurosymbolic Systems Engineering for MBSE",
       "shape": "rectangle",
       "z": 8,
       "previewImage": "https://www.modelware.io/assets/images/oml-code-social.png",
-      "previewDescription": "OML Code is a Neurosymbolic Systems Engineering platform built on Logic, AI, and DevOps. Author formal models you can reason on and compute over."
+      "previewDescription": "Modelware builds OML Code, the Neurosymbolic Systems Engineering platform for MBSE: formal models you can reason on, query, and ground AI in. Logic, AI, DevOps."
     },
     {
       "id": "node-mq5rxl6g-njtf2t",
