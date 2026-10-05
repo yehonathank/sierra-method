@@ -33,7 +33,7 @@ description <https://fireforce6.github.io/mission-control/operational-analysis/e
     ]
 
     instance NetworkInterface : ent:Entity [
-        base:description "Handles data synchronization between dashboard and cloud services."
+        base:description "Handles data synchronization between dashboard and cloud services. (Assignment 6 MCP write test.)"
         ent:hasCapability capabilities:C2
     ]
 
@@ -50,5 +50,10 @@ description <https://fireforce6.github.io/mission-control/operational-analysis/e
     ref instance stakeholders:SafetyOfficer : ent:Actor [
         base:description "Ensures compliance with safety protocols during fire management operations."
         ent:hasCapability capabilities:C7
+    ]
+
+    instance Assignment6Probe : ent:Entity [
+        base:description "Temporary probe entity for Assignment 6."
+        ent:hasCapability capabilities:C2
     ]
 }
