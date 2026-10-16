@@ -2,7 +2,7 @@
   "mcpServers": {
     "oml": {
       "command": "npx",
-      "args": ["-y", "@oml/mcp", "--workspace", "${workspaceFolder}"],
+      "args": ["-y", "@oml/mcp"],
       "env": {
         "NPM_CONFIG_PREFIX": "/usr"
       }
